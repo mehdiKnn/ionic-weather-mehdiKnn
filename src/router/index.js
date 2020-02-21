@@ -1,29 +1,29 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Vue from 'vue';
+import Home from '../views/Home.vue';
+import { IonicVueRouter } from '@ionic/vue';
 
-Vue.use(VueRouter)
+Vue.use(IonicVueRouter);
+// Use matchMedia to check the user preference
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
 
-const routes = [
-  {
-    path: '/',
-    name: 'home',
-    component: Home
-  },
-  {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
-]
+toggleDarkTheme(prefersDark.matches);
 
-const router = new VueRouter({
+// Listen for changes to the prefers-color-scheme media query
+prefersDark.addListener((mediaQuery) => toggleDarkTheme(mediaQuery.matches));
+
+// Add or remove the "dark" class based on if the media query matches
+function toggleDarkTheme(shouldAdd) {
+  document.body.classList.toggle('dark', shouldAdd);
+}
+
+export default new IonicVueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes
-})
-
-export default router
+  routes: [
+    {
+      path: '/',
+      name: 'home',
+      component: Home
+    },
+  ]
+});
